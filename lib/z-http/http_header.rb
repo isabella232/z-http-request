@@ -1,4 +1,4 @@
-module EventMachine
+module ZMachine
   # A simple hash is returned for each request made by HttpClient with the
   # headers that were given by the server for that request.
   class HttpResponseHeader < Hash

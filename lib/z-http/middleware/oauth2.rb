@@ -1,4 +1,4 @@
-module EventMachine
+module ZMachine
   module Middleware
     class OAuth2
       include EM::HttpEncoding

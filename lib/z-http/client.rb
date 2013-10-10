@@ -1,6 +1,6 @@
 require 'cookiejar'
 
-module EventMachine
+module ZMachine
 
 
   class HttpClient
@@ -156,7 +156,7 @@ module EventMachine
 
       # Set the User-Agent if it hasn't been specified
       if !head.key?('user-agent')
-        head['user-agent'] = "EventMachine HttpClient"
+        head['user-agent'] = "ZMachine HttpClient"
       elsif head['user-agent'].nil?
         head.delete('user-agent')
       end

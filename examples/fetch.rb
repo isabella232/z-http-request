@@ -1,6 +1,6 @@
 require 'rubygems'
-require 'eventmachine'
-require '../lib/em-http'
+require 'ZMachine'
+require '../lib/z-http'
 
 urls = ARGV
 if urls.size < 1

@@ -1,30 +1,30 @@
-module EventMachine
+module ZMachine
 
-  # EventMachine based Multi request client, based on a streaming HTTPRequest class,
+  # ZMachine based Multi request client, based on a streaming HTTPRequest class,
   # which allows you to open multiple parallel connections and return only when all
   # of them finish. (i.e. ideal for parallelizing workloads)
   #
   # == Example
   #
-  #  EventMachine.run {
+  #  ZMachine.run {
   #
-  #    multi = EventMachine::MultiRequest.new
+  #    multi = ZMachine::MultiRequest.new
   #
   #    # add multiple requests to the multi-handler
-  #    multi.add(:a, EventMachine::HttpRequest.new('http://www.google.com/').get)
-  #    multi.add(:b, EventMachine::HttpRequest.new('http://www.yahoo.com/').get)
+  #    multi.add(:a, ZMachine::HttpRequest.new('http://www.google.com/').get)
+  #    multi.add(:b, ZMachine::HttpRequest.new('http://www.yahoo.com/').get)
   #
   #    multi.callback {
   #      p multi.responses[:callback]
   #      p multi.responses[:errback]
   #
-  #      EventMachine.stop
+  #      ZMachine.stop
   #    }
   #  }
   #
 
   class MultiRequest
-    include EventMachine::Deferrable
+    include ZMachine::Deferrable
 
     attr_reader :requests, :responses
 

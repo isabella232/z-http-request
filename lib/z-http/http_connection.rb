@@ -1,4 +1,4 @@
-module EventMachine
+module ZMachine
 
   module HTTPMethods
     def get      options = {}, &blk;  setup_request(:get,     options, &blk); end
@@ -52,7 +52,7 @@ module EventMachine
 
     def activate_connection(client)
       begin
-        EventMachine.bind_connect(@connopts.bind, @connopts.bind_port,
+        ZMachine.bind_connect(@connopts.bind, @connopts.bind_port,
                                   @connopts.host, @connopts.port,
                                   HttpStubConnection) do |conn|
           post_init
@@ -66,7 +66,7 @@ module EventMachine
         end
 
         finalize_request(client)
-      rescue EventMachine::ConnectionError => e
+      rescue ZMachine::ConnectionError => e
         #
         # Currently, this can only fire on initial connection setup
         # since #connect is a synchronous method. Hence, rescue the exception,
@@ -190,7 +190,7 @@ module EventMachine
           @conn.pending_connect_timeout = @connopts.connect_timeout
           @conn.comm_inactivity_timeout = @connopts.inactivity_timeout
           @conn.callback { r.connection_completed }
-        rescue EventMachine::ConnectionError => e
+        rescue ZMachine::ConnectionError => e
           @clients.pop.close(e.message)
         end
       else

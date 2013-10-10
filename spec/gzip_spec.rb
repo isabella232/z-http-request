@@ -1,13 +1,13 @@
 require 'helper'
 
-describe EventMachine::HttpDecoders::GZip do
+describe ZMachine::HttpDecoders::GZip do
 
   let(:compressed) {
     compressed = ["1f8b08089668a6500003686900cbc8e402007a7a6fed03000000"].pack("H*")
   }
 
   it "should extract the stream of a vanilla gzip" do
-    header = EventMachine::HttpDecoders::GZipHeader.new
+    header = ZMachine::HttpDecoders::GZipHeader.new
     stream = header.extract_stream(compressed)
 
     stream.unpack("H*")[0].should eq("cbc8e402007a7a6fed03000000")
@@ -16,7 +16,7 @@ describe EventMachine::HttpDecoders::GZip do
   it "should decompress a vanilla gzip" do
     decompressed = ""
 
-    gz = EventMachine::HttpDecoders::GZip.new do |data|
+    gz = ZMachine::HttpDecoders::GZip.new do |data|
       decompressed << data
     end
 
@@ -29,7 +29,7 @@ describe EventMachine::HttpDecoders::GZip do
   it "should decompress a vanilla gzip file byte by byte" do
     decompressed = ""
 
-    gz = EventMachine::HttpDecoders::GZip.new do |data|
+    gz = ZMachine::HttpDecoders::GZip.new do |data|
       decompressed << data
     end
 
@@ -45,7 +45,7 @@ describe EventMachine::HttpDecoders::GZip do
   it "should decompress a large file" do
     decompressed = ""
 
-    gz = EventMachine::HttpDecoders::GZip.new do |data|
+    gz = ZMachine::HttpDecoders::GZip.new do |data|
       decompressed << data
     end
 
@@ -58,11 +58,11 @@ describe EventMachine::HttpDecoders::GZip do
 
   it "should fail with a DecoderError if not a gzip file" do
     not_a_gzip = ["1f8c08089668a650000"].pack("H*")
-    header = EventMachine::HttpDecoders::GZipHeader.new
+    header = ZMachine::HttpDecoders::GZipHeader.new
 
     lambda {
       header.extract_stream(not_a_gzip)
-    }.should raise_exception(EventMachine::HttpDecoders::DecoderError)
+    }.should raise_exception(ZMachine::HttpDecoders::DecoderError)
   end
 
 end

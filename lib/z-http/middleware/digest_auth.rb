@@ -1,10 +1,10 @@
-module EventMachine
+module ZMachine
   module Middleware
     require 'digest'
     require 'securerandom'
 
     class DigestAuth
-      include EventMachine::HttpEncoding
+      include ZMachine::HttpEncoding
 
       attr_accessor :auth_digest, :is_digest_auth
 

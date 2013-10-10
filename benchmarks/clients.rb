@@ -24,13 +24,13 @@ with_server do
       end
     end
 
-    tach('em-http-request') do |n|
-      EventMachine.run {
+    tach('z-http-request') do |n|
+      ZMachine.run {
         count = 0
         error = 0
 
         n.times do
-          http = EventMachine::HttpRequest.new(url).get
+          http = ZMachine::HttpRequest.new(url).get
 
           http.callback {
             count += 1
@@ -52,12 +52,12 @@ with_server do
       }
     end
 
-    tach('em-http-request (persistent)') do |n|
-      EventMachine.run {
+    tach('z-http-request (persistent)') do |n|
+      ZMachine.run {
         count = 0
         error = 0
 
-        conn = EventMachine::HttpRequest.new(url)
+        conn = ZMachine::HttpRequest.new(url)
 
         n.times do
           http = conn.get :keepalive => true
@@ -144,7 +144,7 @@ end
 #+------------------------------+-----------+
 #| tach                         | total     |
 #+------------------------------+-----------+
-#| em-http-request (persistent) | 0.145512  |
+#| z-http-request (persistent) | 0.145512  |
 #+------------------------------+-----------+
 #| Excon                        | 0.181564  |
 #+------------------------------+-----------+
@@ -166,5 +166,5 @@ end
 #+------------------------------+-----------+
 #| Excon (persistent)           | 4.018761  |
 #+------------------------------+-----------+
-#| em-http-request              | 15.025291 |
+#| z-http-request              | 15.025291 |
 #+------------------------------+-----------+

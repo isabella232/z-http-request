@@ -3,7 +3,7 @@ require 'stringio'
 
 ##
 # Provides a unified callback interface to decompression libraries.
-module EventMachine::HttpDecoders
+module ZMachine::HttpDecoders
 
   class DecoderError < StandardError
   end

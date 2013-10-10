@@ -1,7 +1,7 @@
 $: << 'lib' << '../../lib'
 
-require 'em-http'
-require 'em-http/middleware/digest_auth'
+require 'z-http'
+require 'z-http/middleware/digest_auth'
 
 digest_config = {
   :username => 'digest_username',

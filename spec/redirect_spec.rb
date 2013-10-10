@@ -22,11 +22,11 @@ class PickyRedirectMiddleware < RedirectMiddleware
   end
 end
 
-describe EventMachine::HttpRequest do
+describe ZMachine::HttpRequest do
 
   it "should follow location redirects" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect').get :redirects => 1
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect').get :redirects => 1
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
@@ -41,8 +41,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should not follow redirects on created" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/created').get :redirects => 1
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/created').get :redirects => 1
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 201
@@ -62,11 +62,11 @@ describe EventMachine::HttpRequest do
 
     HTTP
 
-    EventMachine.run do
+    ZMachine.run do
       @stub = StubServer.new(:host => '127.0.0.1', :port => 8070, :response => response)
       @echo = StubServer.new(:host => 'localhost', :port => 8071, :echo     => true)
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8070/').get :redirects => 1
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8070/').get :redirects => 1
 
       http.errback  { failed(http) }
       http.callback do
@@ -88,11 +88,11 @@ describe EventMachine::HttpRequest do
 
     HTTP
 
-    EventMachine.run do
+    ZMachine.run do
       @stub = StubServer.new(:host => '127.0.0.1', :port => 8070, :response => response)
       @echo = StubServer.new(:host => '127.0.0.1', :port => 8071, :echo     => true)
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8070/').get :redirects => 1
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8070/').get :redirects => 1
 
       http.errback  { failed(http) }
       http.callback do
@@ -115,11 +115,11 @@ describe EventMachine::HttpRequest do
 
     HTTP
 
-    EventMachine.run do
+    ZMachine.run do
       @stub = StubServer.new(:host => '127.0.0.1', :port => 8070, :response => response)
       @echo = StubServer.new(:host => '127.0.0.1', :port => 8071, :echo     => true)
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8070/').get :redirects => 1
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8070/').get :redirects => 1
 
       http.errback  { failed(http) }
       http.callback do
@@ -132,11 +132,11 @@ describe EventMachine::HttpRequest do
   end
 
   it "should redirect with missing content-length" do
-    EventMachine.run {
+    ZMachine.run {
       response = "HTTP/1.0 301 MOVED PERMANENTLY\r\nlocation: http://127.0.0.1:8090/redirect\r\n\r\n"
       @stub = StubServer.new(:host => '127.0.0.1', :port => 8070, :response => response)
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8070/').get :redirects => 3
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8070/').get :redirects => 3
       http.errback { failed(http) }
 
       http.callback {
@@ -153,8 +153,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should follow redirects on HEAD method" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/head').head :redirects => 1
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/head').head :redirects => 1
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
@@ -165,8 +165,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should report last_effective_url" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').get
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
@@ -178,8 +178,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should default to 0 redirects" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect').get
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 301
@@ -192,8 +192,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should not invoke redirect logic on failed(http) connections" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8070/', :connect_timeout => 0.1).get :redirects => 5
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8070/', :connect_timeout => 0.1).get :redirects => 5
       http.callback { failed(http) }
       http.errback {
         http.redirects.should == 0
@@ -203,8 +203,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should normalize redirect urls" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/bad').get :redirects => 1
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/bad').get :redirects => 1
       http.errback { failed(http) }
       http.callback {
         http.last_effective_url.to_s.should match('http://127.0.0.1:8090/')
@@ -215,8 +215,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should fail gracefully on a missing host in absolute Location header" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/nohost').get :redirects => 1
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/nohost').get :redirects => 1
       http.callback { failed(http) }
       http.errback {
         http.error.should == 'Location header format error'
@@ -226,11 +226,11 @@ describe EventMachine::HttpRequest do
   end
 
   it "should apply timeout settings on redirects" do
-    EventMachine.run {
+    ZMachine.run {
       t = Time.now.to_i
-      EventMachine.heartbeat_interval = 0.1
+      ZMachine.heartbeat_interval = 0.1
 
-      conn = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/timeout', :inactivity_timeout => 0.1)
+      conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/timeout', :inactivity_timeout => 0.1)
       http = conn.get :redirects => 1
       http.callback { failed(http) }
       http.errback {
@@ -241,8 +241,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should capture and pass cookies on redirect and pass_cookies by default" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/multiple-with-cookie').get :redirects => 2, :head => {'cookie' => 'id=2;'}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/multiple-with-cookie').get :redirects => 2, :head => {'cookie' => 'id=2;'}
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
@@ -259,8 +259,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should capture and not pass cookies on redirect if passing is disabled via pass_cookies" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/multiple-with-cookie').get :redirects => 2, :pass_cookies => false, :head => {'cookie' => 'id=2;'}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/multiple-with-cookie').get :redirects => 2, :pass_cookies => false, :head => {'cookie' => 'id=2;'}
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
@@ -277,8 +277,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should follow location redirects with path" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect').get :path => '/redirect', :redirects => 1
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect').get :path => '/redirect', :redirects => 1
       http.errback { failed(http) }
       http.callback {
         http.last_effective_url.to_s.should == 'http://127.0.0.1:8090/gzip'
@@ -291,8 +291,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should call middleware each time it redirects" do
-    EventMachine.run {
-      conn = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/middleware_redirects_1')
+    ZMachine.run {
+      conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/middleware_redirects_1')
       conn.use RedirectMiddleware
       http = conn.get :redirects => 3
       http.errback { failed(http) }
@@ -305,8 +305,8 @@ describe EventMachine::HttpRequest do
   end
 
   it "should call middleware which may reject a redirection" do
-    EventMachine.run {
-      conn = EventMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/middleware_redirects_1')
+    ZMachine.run {
+      conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/redirect/middleware_redirects_1')
       conn.use PickyRedirectMiddleware
       http = conn.get :redirects => 3
       http.errback { failed(http) }

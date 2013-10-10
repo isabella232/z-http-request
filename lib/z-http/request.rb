@@ -1,4 +1,4 @@
-module EventMachine
+module ZMachine
   class HttpRequest
     @middleware = []
 

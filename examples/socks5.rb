@@ -1,6 +1,6 @@
 require 'rubygems'
-require 'eventmachine'
-require '../lib/em-http'
+require 'ZMachine'
+require '../lib/z-http'
 
 EM.run do
   # Establish a SOCKS5 tunnel via SSH

@@ -17,7 +17,7 @@
 ## 0.3.0 / 2011-01-15
 
 - IMPORTANT: default to non-persistent connections (timeout => 0 now requires :keepalive => true)
-- see: https://github.com/igrigorik/em-http-request/commit/1ca5b608e876c18fa6cfa318d0685dcf5b974e09
+- see: https://github.com/igrigorik/z-http-request/commit/1ca5b608e876c18fa6cfa318d0685dcf5b974e09
 
 - added escape_utils dependency to fix slow encode on long string escapes
 

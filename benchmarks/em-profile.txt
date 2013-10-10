@@ -1,13 +1,13 @@
 Total: 143 samples
       67  46.9%  46.9%      109  76.2% Kernel#gem_original_require
       17  11.9%  58.7%       17  11.9% garbage_collector
-      12   8.4%  67.1%       12   8.4% EventMachine.connect_server
+      12   8.4%  67.1%       12   8.4% ZMachine.connect_server
       11   7.7%  74.8%       11   7.7% Dir.[]
       11   7.7%  82.5%       11   7.7% File.file?
        4   2.8%  85.3%        4   2.8% Kernel#eval
        3   2.1%  87.4%       16  11.2% Enumerable#find
        3   2.1%  89.5%        3   2.1% Regexp#initialize
-       2   1.4%  90.9%       16  11.2% EventMachine.run_machine
+       2   1.4%  90.9%       16  11.2% ZMachine.run_machine
        2   1.4%  92.3%        2   1.4% Regexp#match
        1   0.7%  93.0%        1   0.7% FFI::DynamicLibrary.open
        1   0.7%  93.7%        1   0.7% Hash#values

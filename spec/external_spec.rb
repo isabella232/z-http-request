@@ -2,11 +2,11 @@ require 'helper'
 
 requires_connection do
 
-  describe EventMachine::HttpRequest do
+  describe ZMachine::HttpRequest do
 
     it "should follow redirects on HEAD method (external)" do
-      EventMachine.run {
-        http = EventMachine::HttpRequest.new('http://www.google.com/').head :redirects => 1
+      ZMachine.run {
+        http = ZMachine::HttpRequest.new('http://www.google.com/').head :redirects => 1
         http.errback { failed(http) }
         http.callback {
           http.response_header.status.should == 200
@@ -16,33 +16,33 @@ requires_connection do
     end
 
     it "should follow redirect to https and initiate the handshake" do
-      EventMachine.run {
-        http = EventMachine::HttpRequest.new('http://github.com/').get :redirects => 5
+      ZMachine.run {
+        http = ZMachine::HttpRequest.new('http://github.com/').get :redirects => 5
 
         http.errback { failed(http) }
         http.callback {
           http.response_header.status.should == 200
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should perform a streaming GET" do
-      EventMachine.run {
+      ZMachine.run {
 
         # digg.com uses chunked encoding
-        http = EventMachine::HttpRequest.new('http://www.httpwatch.com/httpgallery/chunked/').get
+        http = ZMachine::HttpRequest.new('http://www.httpwatch.com/httpgallery/chunked/').get
 
         http.errback { failed(http) }
         http.callback {
           http.response_header.status.should == 200
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should handle a 100 continue" do
-      EventMachine.run {
+      ZMachine.run {
         # 8.2.3 Use of the 100 (Continue) Status - http://www.ietf.org/rfc/rfc2616.txt
         #
         # An origin server SHOULD NOT send a 100 (Continue) response if
@@ -68,39 +68,39 @@ requires_connection do
         # MUST send a final response after the request has been completed.
 
         url = 'http://ws.serviceobjects.com/lv/LeadValidation.asmx/ValidateLead_V2'
-        http = EventMachine::HttpRequest.new(url).post :body => {:name => :test}
+        http = ZMachine::HttpRequest.new(url).post :body => {:name => :test}
 
         http.errback { failed(http) }
         http.callback {
           http.response_header.status.should == 500
           http.response.should match('Missing')
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should detect deflate encoding" do
       pending "need an endpoint which supports deflate.. MSN is no longer"
-      EventMachine.run {
+      ZMachine.run {
 
         options = {:head => {"accept-encoding" => "deflate"}, :redirects => 5}
-        http = EventMachine::HttpRequest.new('http://www.msn.com').get options
+        http = ZMachine::HttpRequest.new('http://www.msn.com').get options
 
         http.errback { failed(http) }
         http.callback {
           http.response_header.status.should == 200
           http.response_header["CONTENT_ENCODING"].should == "deflate"
 
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should stream chunked gzipped data" do
-      EventMachine.run {
+      ZMachine.run {
         options = {:head => {"accept-encoding" => "gzip"}}
         # GitHub sends chunked gzip, time for a little Inception ;)
-        http = EventMachine::HttpRequest.new('https://github.com/igrigorik/em-http-request/commits/master').get options
+        http = ZMachine::HttpRequest.new('https://github.com/igrigorik/z-http-request/commits/master').get options
 
         http.errback { failed(http) }
         http.callback {
@@ -108,7 +108,7 @@ requires_connection do
           http.response_header["CONTENT_ENCODING"].should == "gzip"
           http.response.should == ''
 
-          EventMachine.stop
+          ZMachine.stop
         }
 
         body = ''
@@ -120,27 +120,27 @@ requires_connection do
 
     context "keepalive" do
       it "should default to non-keepalive" do
-        EventMachine.run {
+        ZMachine.run {
           headers = {'If-Modified-Since' => 'Thu, 05 Aug 2010 22:54:44 GMT'}
-          http = EventMachine::HttpRequest.new('http://www.google.com/images/logos/ps_logo2.png').get :head => headers
+          http = ZMachine::HttpRequest.new('http://www.google.com/images/logos/ps_logo2.png').get :head => headers
 
           http.errback { fail }
           start = Time.now.to_i
           http.callback {
             (Time.now.to_i - start).should be_within(2).of(0)
-            EventMachine.stop
+            ZMachine.stop
           }
         }
       end
 
       it "should work with keep-alive servers" do
-        EventMachine.run {
-          http = EventMachine::HttpRequest.new('http://mexicodiario.com/touch.public.json.php').get :keepalive => true
+        ZMachine.run {
+          http = ZMachine::HttpRequest.new('http://mexicodiario.com/touch.public.json.php').get :keepalive => true
 
           http.errback { failed(http) }
           http.callback {
             http.response_header.status.should == 200
-            EventMachine.stop
+            ZMachine.stop
           }
         }
       end

@@ -1,6 +1,6 @@
 require 'multi_json'
 
-module EventMachine
+module ZMachine
   module Middleware
     class JSONResponse
       def response(resp)

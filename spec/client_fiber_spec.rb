@@ -1,15 +1,15 @@
 require 'helper'
 require 'fiber'
 
-describe EventMachine::HttpRequest do
+describe ZMachine::HttpRequest do
   context "with fibers" do
 
     it "should be transparent to connection errors" do
-      EventMachine.run do
+      ZMachine.run do
         Fiber.new do
           f = Fiber.current
           fired = false
-          http = EventMachine::HttpRequest.new('http://non-existing.domain/', :connection_timeout => 0.1).get
+          http = ZMachine::HttpRequest.new('http://non-existing.domain/', :connection_timeout => 0.1).get
           http.callback { failed(http) }
           http.errback { f.resume :errback }
 

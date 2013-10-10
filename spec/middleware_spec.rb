@@ -1,6 +1,6 @@
 require 'helper'
 
-describe EventMachine::HttpRequest do
+describe ZMachine::HttpRequest do
 
   class EmptyMiddleware; end
 
@@ -11,7 +11,7 @@ describe EventMachine::HttpRequest do
   end
 
   it "should accept middleware" do
-    EventMachine.run {
+    ZMachine.run {
       lambda {
         conn = EM::HttpRequest.new('http://127.0.0.1:8090')
         conn.use ResponseMiddleware
@@ -36,7 +36,7 @@ describe EventMachine::HttpRequest do
     end
 
     it "should accept middleware initialization parameters" do
-      EventMachine.run {
+      ZMachine.run {
         conn = EM::HttpRequest.new('http://127.0.0.1:8090')
         conn.use ConfigurableMiddleware, 'conf-value' do
           'block-value'
@@ -61,7 +61,7 @@ describe EventMachine::HttpRequest do
     end
 
     it "should execute response middleware before user callbacks" do
-      EventMachine.run {
+      ZMachine.run {
         conn = EM::HttpRequest.new('http://127.0.0.1:8090')
         conn.use ResponseMiddleware
 
@@ -75,7 +75,7 @@ describe EventMachine::HttpRequest do
     end
 
     it "should execute global response middleware before user callbacks" do
-      EventMachine.run {
+      ZMachine.run {
         EM::HttpRequest.use GlobalMiddleware
 
         conn = EM::HttpRequest.new('http://127.0.0.1:8090')
@@ -100,15 +100,15 @@ describe EventMachine::HttpRequest do
     end
 
     it "should execute request middleware before dispatching request" do
-      EventMachine.run {
-        conn = EventMachine::HttpRequest.new('http://127.0.0.1:8090/')
+      ZMachine.run {
+        conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/')
         conn.use RequestMiddleware
 
         req = conn.post :body => "data"
         req.callback {
           req.response_header.status.should == 200
           req.response.should match(/data modified/)
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
@@ -126,15 +126,15 @@ describe EventMachine::HttpRequest do
     end
 
     it "should use middleware to JSON encode and JSON decode the body" do
-      EventMachine.run {
-        conn = EventMachine::HttpRequest.new('http://127.0.0.1:8090/')
+      ZMachine.run {
+        conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/')
         conn.use JSONify
 
         req = conn.post :body => {:ruby => :hash}
         req.callback {
           req.response_header.status.should == 200
           req.response.should == {"ruby" => "hash"}
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end

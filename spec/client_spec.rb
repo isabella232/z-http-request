@@ -1,46 +1,46 @@
 require 'helper'
 
-describe EventMachine::HttpRequest do
+describe ZMachine::HttpRequest do
 
   def failed(http=nil)
-    EventMachine.stop
+    ZMachine.stop
     http ? fail(http.error) : fail
   end
 
   it "should perform successful GET" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should match(/Hello/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform successful GET with a URI passed as argument" do
-    EventMachine.run {
+    ZMachine.run {
       uri = URI.parse('http://127.0.0.1:8090/')
-      http = EventMachine::HttpRequest.new(uri).get
+      http = ZMachine::HttpRequest.new(uri).get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should match(/Hello/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should succeed GET on missing path" do
-    EventMachine.run {
+    ZMachine.run {
       lambda {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090').get
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090').get
       http.callback {
         http.response.should match(/Hello/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }.should_not raise_error(ArgumentError)
 
@@ -48,9 +48,9 @@ describe EventMachine::HttpRequest do
   end
 
   it "should raise error on invalid URL" do
-    EventMachine.run {
+    ZMachine.run {
       lambda {
-      EventMachine::HttpRequest.new('random?text').get
+      ZMachine::HttpRequest.new('random?text').get
     }.should raise_error
 
     EM.stop
@@ -58,246 +58,246 @@ describe EventMachine::HttpRequest do
   end
 
   it "should perform successful HEAD with a URI passed as argument" do
-    EventMachine.run {
+    ZMachine.run {
       uri = URI.parse('http://127.0.0.1:8090/')
-      http = EventMachine::HttpRequest.new(uri).head
+      http = ZMachine::HttpRequest.new(uri).head
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should == ""
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform successful DELETE with a URI passed as argument" do
-    EventMachine.run {
+    ZMachine.run {
       uri = URI.parse('http://127.0.0.1:8090/')
-      http = EventMachine::HttpRequest.new(uri).delete
+      http = ZMachine::HttpRequest.new(uri).delete
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should == ""
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should return 404 on invalid path" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/fail').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/fail').get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 404
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should return HTTP reason" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/fail').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/fail').get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 404
         http.response_header.http_reason.should == 'Not Found'
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should return HTTP reason 'unknown' on a non-standard status code" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/fail_with_nonstandard_response').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/fail_with_nonstandard_response').get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 420
         http.response_header.http_reason.should == 'unknown'
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should build query parameters from Hash" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').get :query => {:q => 'test'}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').get :query => {:q => 'test'}
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should match(/test/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should pass query parameters string" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').get :query => "q=test"
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').get :query => "q=test"
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should match(/test/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should encode an array of query parameters" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_query').get :query => {:hash =>['value1','value2']}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_query').get :query => {:hash =>['value1','value2']}
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should match(/hash\[\]=value1&hash\[\]=value2/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform successful PUT" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').put :body => "data"
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').put :body => "data"
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should match(/data/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform successful POST" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').post :body => "data"
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').post :body => "data"
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should match(/data/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform successful PATCH" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').patch :body => "data"
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').patch :body => "data"
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should match(/data/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should escape body on POST" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').post :body => {:stuff => 'string&string'}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').post :body => {:stuff => 'string&string'}
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should == "stuff=string%26string"
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform successful POST with Ruby Hash/Array as params" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').post :body => {"key1" => 1, "key2" => [2,3]}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').post :body => {"key1" => 1, "key2" => [2,3]}
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
 
         http.response.should match(/key1=1&key2\[0\]=2&key2\[1\]=3/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should set content-length to 0 on posts with empty bodies" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_length_from_header').post
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_length_from_header').post
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
 
         http.response.strip.split(':')[1].should == '0'
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform successful POST with Ruby Hash/Array as params and with the correct content length" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_length').post :body => {"key1" => "data1"}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_length').post :body => {"key1" => "data1"}
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
 
         http.response.to_i.should == 10
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform successful GET with custom header" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').get :head => {'if-none-match' => 'evar!'}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').get :head => {'if-none-match' => 'evar!'}
 
       http.errback { p http; failed(http) }
       http.callback {
         http.response_header.status.should == 304
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform basic auth" do
-    EventMachine.run {
+    ZMachine.run {
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/authtest').get :head => {'authorization' => ['user', 'pass']}
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/authtest').get :head => {'authorization' => ['user', 'pass']}
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should perform basic auth via the URL" do
-    EventMachine.run {
+    ZMachine.run {
 
-      http = EventMachine::HttpRequest.new('http://user:pass@127.0.0.1:8090/authtest').get
+      http = ZMachine::HttpRequest.new('http://user:pass@127.0.0.1:8090/authtest').get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should return peer's IP address" do
-     EventMachine.run {
+     ZMachine.run {
 
-       conn = EventMachine::HttpRequest.new('http://127.0.0.1:8090/')
+       conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/')
        conn.peer.should be_nil
 
        http = conn.get
@@ -308,28 +308,28 @@ describe EventMachine::HttpRequest do
          conn.peer.should == '127.0.0.1'
          http.peer.should == '127.0.0.1'
 
-         EventMachine.stop
+         ZMachine.stop
        }
      }
    end
 
   it "should remove all newlines from long basic auth header" do
-    EventMachine.run {
+    ZMachine.run {
       auth = {'authorization' => ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz']}
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/auth').get :head => auth
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/auth').get :head => auth
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response.should == "Basic YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhOnp6enp6enp6enp6enp6enp6enp6enp6enp6enp6eg=="
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should send proper OAuth auth header" do
-    EventMachine.run {
+    ZMachine.run {
       oauth_header = 'OAuth oauth_nonce="oqwgSYFUD87MHmJJDv7bQqOF2EPnVus7Wkqj5duNByU", b=c, d=e'
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/auth').get :head => {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/auth').get :head => {
         'authorization' => oauth_header
       }
 
@@ -337,43 +337,43 @@ describe EventMachine::HttpRequest do
       http.callback {
         http.response_header.status.should == 200
         http.response.should == oauth_header
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should return ETag and Last-Modified headers" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_query').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_query').get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response_header.etag.should match('abcdefg')
         http.response_header.last_modified.should match('Fri, 13 Aug 2010 17:31:21 GMT')
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should return raw headers in a hash" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_headers').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_headers').get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response_header.raw['Set-Cookie'].should match('test=yes')
         http.response_header.raw['X-Forward-Host'].should match('proxy.local')
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should detect deflate encoding" do
-    EventMachine.run {
+    ZMachine.run {
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/deflate').get :head => {"accept-encoding" => "deflate"}
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/deflate').get :head => {"accept-encoding" => "deflate"}
 
       http.errback { failed(http) }
       http.callback {
@@ -381,15 +381,15 @@ describe EventMachine::HttpRequest do
         http.response_header["CONTENT_ENCODING"].should == "deflate"
         http.response.should == "compressed"
 
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should detect gzip encoding" do
-    EventMachine.run {
+    ZMachine.run {
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/gzip').get :head => {"accept-encoding" => "gzip, compressed"}
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/gzip').get :head => {"accept-encoding" => "gzip, compressed"}
 
       http.errback { failed(http) }
       http.callback {
@@ -397,7 +397,7 @@ describe EventMachine::HttpRequest do
         http.response_header["CONTENT_ENCODING"].should == "gzip"
         http.response.should == "compressed"
 
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
@@ -406,9 +406,9 @@ describe EventMachine::HttpRequest do
     expected_response = Zlib::GzipReader.open(File.dirname(__FILE__) + "/fixtures/gzip-sample.gz") { |f| f.read }
     actual_response = ''
 
-    EventMachine.run {
+    ZMachine.run {
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/gzip-large').get :head => {"accept-encoding" => "gzip, compressed"}
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/gzip-large').get :head => {"accept-encoding" => "gzip, compressed"}
 
       http.errback { failed(http) }
       http.callback {
@@ -418,7 +418,7 @@ describe EventMachine::HttpRequest do
 
         actual_response.should == expected_response
 
-        EventMachine.stop
+        ZMachine.stop
       }
       http.stream do |chunk|
         actual_response << chunk
@@ -427,9 +427,9 @@ describe EventMachine::HttpRequest do
   end
 
   it "should not decode the response when configured so" do
-    EventMachine.run {
+    ZMachine.run {
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/gzip').get :head => {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/gzip').get :head => {
         "accept-encoding" => "gzip, compressed"
       }, :decoding => false
 
@@ -441,69 +441,69 @@ describe EventMachine::HttpRequest do
         raw = http.response
         Zlib::GzipReader.new(StringIO.new(raw)).read.should == "compressed"
 
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should timeout after 0.1 seconds of inactivity" do
-    EventMachine.run {
+    ZMachine.run {
       t = Time.now.to_i
-      EventMachine.heartbeat_interval = 0.1
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/timeout', :inactivity_timeout => 0.1).get
+      ZMachine.heartbeat_interval = 0.1
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/timeout', :inactivity_timeout => 0.1).get
 
       http.errback {
         http.error.should == Errno::ETIMEDOUT
         (Time.now.to_i - t).should <= 1
-        EventMachine.stop
+        ZMachine.stop
       }
       http.callback { failed(http) }
     }
   end
 
   it "should complete a Location: with a relative path" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/relative-location').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/relative-location').get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header['LOCATION'].should == 'http://127.0.0.1:8090/forwarded'
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   context "body content-type encoding" do
     it "should not set content type on string in body" do
-      EventMachine.run {
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post :body => "data"
+      ZMachine.run {
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post :body => "data"
 
         http.errback { failed(http) }
         http.callback {
           http.response_header.status.should == 200
           http.response.should be_empty
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should set content-type automatically when passed a ruby hash/array for body" do
-      EventMachine.run {
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post :body => {:a => :b}
+      ZMachine.run {
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post :body => {:a => :b}
 
         http.errback { failed(http) }
         http.callback {
           http.response_header.status.should == 200
           http.response.should match("application/x-www-form-urlencoded")
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should not override content-type when passing in ruby hash/array for body" do
-      EventMachine.run {
+      ZMachine.run {
         ct = 'text; charset=utf-8'
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post({
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post({
           :body => {:a => :b}, :head => {'content-type' => ct}})
 
           http.errback { failed(http) }
@@ -511,15 +511,15 @@ describe EventMachine::HttpRequest do
             http.response_header.status.should == 200
             http.content_charset.should == Encoding.find('utf-8') if defined? Encoding
             http.response_header["CONTENT_TYPE"].should == ct
-            EventMachine.stop
+            ZMachine.stop
           }
       }
     end
 
     it "should default to external encoding on invalid encoding" do
-      EventMachine.run {
+      ZMachine.run {
         ct = 'text/html; charset=utf-8lias'
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post({
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post({
           :body => {:a => :b}, :head => {'content-type' => ct}})
 
           http.errback { failed(http) }
@@ -527,15 +527,15 @@ describe EventMachine::HttpRequest do
             http.response_header.status.should == 200
             http.content_charset.should == Encoding.find('utf-8') if defined? Encoding
             http.response_header["CONTENT_TYPE"].should == ct
-            EventMachine.stop
+            ZMachine.stop
           }
       }
     end
 
     it "should processed escaped content-type" do
-      EventMachine.run {
+      ZMachine.run {
         ct = "text/html; charset=\"ISO-8859-4\""
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post({
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post({
           :body => {:a => :b}, :head => {'content-type' => ct}})
 
           http.errback { failed(http) }
@@ -543,7 +543,7 @@ describe EventMachine::HttpRequest do
             http.response_header.status.should == 200
             http.content_charset.should == Encoding.find('ISO-8859-4') if defined? Encoding
             http.response_header["CONTENT_TYPE"].should == ct
-            EventMachine.stop
+            ZMachine.stop
           }
       }
     end
@@ -551,8 +551,8 @@ describe EventMachine::HttpRequest do
 
   context "optional header callback" do
     it "should optionally pass the response headers" do
-      EventMachine.run {
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').get
+      ZMachine.run {
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').get
 
         http.errback { failed(http) }
         http.headers { |hash|
@@ -564,14 +564,14 @@ describe EventMachine::HttpRequest do
         http.callback {
           http.response_header.status.should == 200
           http.response.should match(/Hello/)
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should allow to terminate current connection from header callback" do
-      EventMachine.run {
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').get
+      ZMachine.run {
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').get
 
         http.callback { failed(http) }
         http.headers { |hash|
@@ -586,16 +586,16 @@ describe EventMachine::HttpRequest do
           http.response_header.status.should == 200
           http.error.should == 'header callback terminated connection'
           http.response.should == ''
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
   end
 
   it "should optionally pass the response body progressively" do
-    EventMachine.run {
+    ZMachine.run {
       body = ''
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').get
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').get
 
       http.errback { failed(http) }
       http.stream { |chunk| body += chunk }
@@ -604,15 +604,15 @@ describe EventMachine::HttpRequest do
         http.response_header.status.should == 200
         http.response.should == ''
         body.should match(/Hello/)
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should optionally pass the deflate-encoded response body progressively" do
-    EventMachine.run {
+    ZMachine.run {
       body = ''
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/deflate').get :head => {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/deflate').get :head => {
         "accept-encoding" => "deflate, compressed"
       }
 
@@ -624,27 +624,27 @@ describe EventMachine::HttpRequest do
         http.response_header["CONTENT_ENCODING"].should == "deflate"
         http.response.should == ''
         body.should == "compressed"
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should accept & return cookie header to user" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/set_cookie').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/set_cookie').get
 
       http.errback { failed(http) }
       http.callback {
         http.response_header.status.should == 200
         http.response_header.cookie.should == "id=1; expires=Sat, 09 Aug 2031 17:53:39 GMT; path=/;"
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should return array of cookies on multiple Set-Cookie headers" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/set_multiple_cookies').get
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/set_multiple_cookies').get
 
       http.errback { failed(http) }
       http.callback {
@@ -653,47 +653,47 @@ describe EventMachine::HttpRequest do
         http.response_header.cookie.first.should == "id=1; expires=Sat, 09 Aug 2031 17:53:39 GMT; path=/;"
         http.response_header.cookie.last.should == "id=2;"
 
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should pass cookie header to server from string" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_cookie').get :head => {'cookie' => 'id=2;'}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_cookie').get :head => {'cookie' => 'id=2;'}
 
       http.errback { failed(http) }
       http.callback {
         http.response.should == "id=2;"
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should pass cookie header to server from Hash" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo_cookie').get :head => {'cookie' => {'id' => 2}}
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_cookie').get :head => {'cookie' => {'id' => 2}}
 
       http.errback { failed(http) }
       http.callback {
         http.response.should == "id=2;"
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should get the body without Content-Length" do
-    EventMachine.run {
+    ZMachine.run {
       @s = StubServer.new("HTTP/1.1 200 OK\r\n\r\nFoo")
 
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8081/').get
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8081/').get
       http.errback { failed(http) }
       http.callback {
         http.response.should match(/Foo/)
         http.response_header['CONTENT_LENGTH'].should be_nil
 
         @s.stop
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
@@ -701,26 +701,26 @@ describe EventMachine::HttpRequest do
   context "when talking to a stub HTTP/1.0 server" do
     it "should get the body without Content-Length" do
 
-      EventMachine.run {
+      ZMachine.run {
         @s = StubServer.new("HTTP/1.0 200 OK\r\nConnection: close\r\n\r\nFoo")
 
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8081/').get
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8081/').get
         http.errback { failed(http) }
         http.callback {
           http.response.should match(/Foo/)
           http.response_header['CONTENT_LENGTH'].should be_nil
 
           @s.stop
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should work with \\n instead of \\r\\n" do
-      EventMachine.run {
+      ZMachine.run {
         @s = StubServer.new("HTTP/1.0 200 OK\nContent-Type: text/plain\nContent-Length: 3\nConnection: close\n\nFoo")
 
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8081/').get
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8081/').get
         http.errback { failed(http) }
         http.callback {
           http.response_header.status.should == 200
@@ -728,16 +728,16 @@ describe EventMachine::HttpRequest do
           http.response.should match(/Foo/)
 
           @s.stop
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should handle invalid HTTP response" do
-      EventMachine.run {
+      ZMachine.run {
         @s = StubServer.new("<html></html>")
 
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8081/').get
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8081/').get
         http.callback { failed(http) }
         http.errback {
           http.error.should_not be_nil
@@ -748,19 +748,19 @@ describe EventMachine::HttpRequest do
   end
 
   it "should stream a file off disk" do
-    EventMachine.run {
-      http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/').post :file => 'spec/fixtures/google.ca'
+    ZMachine.run {
+      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').post :file => 'spec/fixtures/google.ca'
 
       http.errback { failed(http) }
       http.callback {
         http.response.should match('google')
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should reconnect if connection was closed between requests" do
-    EventMachine.run {
+    ZMachine.run {
       conn = EM::HttpRequest.new('http://127.0.0.1:8090/')
       req = conn.get
 
@@ -772,7 +772,7 @@ describe EventMachine::HttpRequest do
           req.callback do
             req.response_header.status.should == 200
             req.response.should match('compressed')
-            EventMachine.stop
+            ZMachine.stop
           end
         end
       end
@@ -780,7 +780,7 @@ describe EventMachine::HttpRequest do
   end
 
   it "should report error if connection was closed by server on client keepalive requests" do
-    EventMachine.run {
+    ZMachine.run {
       conn = EM::HttpRequest.new('http://127.0.0.1:8090/')
       req = conn.get :keepalive => true
 
@@ -790,14 +790,14 @@ describe EventMachine::HttpRequest do
         req.callback { failed(http) }
         req.errback do
           req.error.should match('connection closed by server')
-          EventMachine.stop
+          ZMachine.stop
         end
       end
     }
   end
 
   it 'should handle malformed Content-Type header repetitions' do
-    EventMachine.run {
+    ZMachine.run {
       response =<<-HTTP.gsub(/^ +/, '').strip
         HTTP/1.0 200 OK
         Content-Type: text/plain; charset=iso-8859-1
@@ -809,17 +809,17 @@ describe EventMachine::HttpRequest do
       HTTP
 
       @s       = StubServer.new(response)
-      http     = EventMachine::HttpRequest.new('http://127.0.0.1:8081/').get
+      http     = ZMachine::HttpRequest.new('http://127.0.0.1:8081/').get
       http.errback { failed(http) }
       http.callback {
         http.content_charset.should == Encoding::ISO_8859_1 if defined? Encoding
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   it "should allow indifferent access to headers" do
-    EventMachine.run {
+    ZMachine.run {
       response =<<-HTTP.gsub(/^ +/, '').strip
         HTTP/1.0 200 OK
         Content-Type: text/plain; charset=utf-8
@@ -831,7 +831,7 @@ describe EventMachine::HttpRequest do
       HTTP
 
       @s       = StubServer.new(response)
-      http     = EventMachine::HttpRequest.new('http://127.0.0.1:8081/').get
+      http     = ZMachine::HttpRequest.new('http://127.0.0.1:8081/').get
       http.errback { failed(http) }
       http.callback {
         http.response_header["Content-Type"].should == "text/plain; charset=utf-8"
@@ -843,44 +843,44 @@ describe EventMachine::HttpRequest do
         http.response_header["X-Custom-Header"].should == "foo"
         http.response_header["X_CUSTOM_HEADER"].should == "foo"
 
-        EventMachine.stop
+        ZMachine.stop
       }
     }
   end
 
   context "User-Agent" do
-    it 'should default to "EventMachine HttpClient"' do
-      EventMachine.run {
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo-user-agent').get
+    it 'should default to "ZMachine HttpClient"' do
+      ZMachine.run {
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo-user-agent').get
 
         http.errback { failed(http) }
         http.callback {
-          http.response.should == '"EventMachine HttpClient"'
-          EventMachine.stop
+          http.response.should == '"ZMachine HttpClient"'
+          ZMachine.stop
         }
       }
     end
 
     it 'should keep header if given empty string' do
-      EventMachine.run {
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo-user-agent').get(:head => { 'user-agent'=>'' })
+      ZMachine.run {
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo-user-agent').get(:head => { 'user-agent'=>'' })
 
         http.errback { failed(http) }
         http.callback {
           http.response.should == '""'
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end
 
     it 'should ommit header if given nil' do
-      EventMachine.run {
-        http = EventMachine::HttpRequest.new('http://127.0.0.1:8090/echo-user-agent').get(:head => { 'user-agent'=>nil })
+      ZMachine.run {
+        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo-user-agent').get(:head => { 'user-agent'=>nil })
 
         http.errback { failed(http) }
         http.callback {
           http.response.should == 'nil'
-          EventMachine.stop
+          ZMachine.stop
         }
       }
     end

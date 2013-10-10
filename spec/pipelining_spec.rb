@@ -2,13 +2,13 @@ require 'helper'
 
 requires_connection do
 
-  describe EventMachine::HttpRequest do
+  describe ZMachine::HttpRequest do
 
     it "should perform successful pipelined GETs" do
-      EventMachine.run do
+      ZMachine.run do
 
         # Mongrel doesn't support pipelined requests - bah!
-        conn = EventMachine::HttpRequest.new('http://www.igvita.com/')
+        conn = ZMachine::HttpRequest.new('http://www.igvita.com/')
 
         pipe1 = conn.get :keepalive => true
         pipe2 = conn.get :path => '/archives/', :keepalive => true
@@ -35,8 +35,8 @@ requires_connection do
     end
 
     it "should perform successful pipelined HEAD requests" do
-      EventMachine.run do
-        conn = EventMachine::HttpRequest.new('http://www.igvita.com/')
+      ZMachine.run do
+        conn = ZMachine::HttpRequest.new('http://www.igvita.com/')
 
         pipe1 = conn.head :keepalive => true
         pipe2 = conn.head :path => '/archives/', :keepalive => true

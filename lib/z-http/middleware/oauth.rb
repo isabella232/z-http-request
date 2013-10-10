@@ -1,6 +1,6 @@
 require 'simple_oauth'
 
-module EventMachine
+module ZMachine
   module Middleware
 
     class OAuth

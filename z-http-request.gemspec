@@ -1,27 +1,28 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path('../lib', __FILE__)
-require 'em-http/version'
+require 'z-http/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'em-http-request'
-  s.version     = EventMachine::HttpRequest::VERSION
+  s.name        = 'z-http-request'
+  s.version     = ZMachine::HttpRequest::VERSION
 
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Ilya Grigorik"]
-  s.email       = ['ilya@igvita.com']
-  s.homepage    = 'http://github.com/igrigorik/em-http-request'
-  s.summary     = 'EventMachine based, async HTTP Request client'
+  s.authors     = ["Ilya Grigorik", "Martin Karlsch"]
+  s.email       = ['ilya@igvita.com', "martin.karlsch@liquidm.com"]
+  s.homepage    = 'http://github.com/madvertise/z-http-request'
+  s.summary     = 'ZMachine based, async HTTP Request client'
   s.description = s.summary
   s.license     = 'MIT'
-  s.rubyforge_project = 'em-http-request'
+  s.rubyforge_project = 'z-http-request'
 
   s.add_dependency 'addressable', '>= 2.3.4'
   s.add_dependency 'cookiejar'
-  s.add_dependency 'em-socksify', '>= 0.3'
-  s.add_dependency 'eventmachine', '>= 1.0.3'
+  # s.add_dependency 'em-socksify', '>= 0.3'
+  s.add_dependency 'zmachine' #, '>= 1.0.3'
   s.add_dependency 'http_parser.rb', '>= 0.6.0.beta.2'
 
-  s.add_development_dependency 'mongrel', '~> 1.2.0.pre2'
+  #s.add_development_dependency 'mongrel', '~> 1.2.0.pre2'
+  s.add_development_dependency 'puma'
   s.add_development_dependency 'multi_json'
   s.add_development_dependency 'rack'
   s.add_development_dependency 'rake'

@@ -1,15 +1,15 @@
 $: << 'lib' << '../lib'
 
-require 'eventmachine'
-require 'em-http'
+require 'ZMachine'
+require 'z-http'
 require 'fiber'
 
 # Using Fibers in Ruby 1.9 to simulate blocking IO / IO scheduling
-# while using the async EventMachine API's
+# while using the async ZMachine API's
 
 def async_fetch(url)
   f = Fiber.current
-  http = EventMachine::HttpRequest.new(url, :connect_timeout => 10, :inactivity_timeout => 20).get
+  http = ZMachine::HttpRequest.new(url, :connect_timeout => 10, :inactivity_timeout => 20).get
 
   http.callback { f.resume(http) }
   http.errback  { f.resume(http) }
@@ -23,7 +23,7 @@ def async_fetch(url)
   http
 end
 
-EventMachine.run do
+ZMachine.run do
   Fiber.new{
 
     puts "Setting up HTTP request #1"
@@ -38,7 +38,7 @@ EventMachine.run do
     data = async_fetch('http://non-existing.domain/')
     puts "Fetched page #3: #{data.response_header.status}"
 
-    EventMachine.stop
+    ZMachine.stop
   }.resume
 end
 

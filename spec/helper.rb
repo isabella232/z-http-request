@@ -1,15 +1,15 @@
 require 'rubygems'
 require 'bundler/setup'
 
-require 'em-http'
-require 'em-http/middleware/oauth2'
+require 'z-http'
+require 'z-http/middleware/oauth2'
 require 'multi_json'
 
 require 'stallion'
 require 'stub_server'
 
 def failed(http = nil)
-  EventMachine.stop
+  ZMachine.stop
   http ? fail(http.error) : fail
 end
 

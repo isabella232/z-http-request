@@ -30,13 +30,13 @@ class StubServer
 
     host = options[:host]
     port = options[:port]
-    @sig = EventMachine::start_server(host, port, Server) do |server|
+    @sig = ZMachine::start_server(host, port, Server) do |server|
       server.response = options[:response]
       server.echo     = options[:echo]
     end
   end
 
   def stop
-    EventMachine.stop_server @sig
+    ZMachine.stop_server @sig
   end
 end

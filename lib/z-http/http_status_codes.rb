@@ -1,4 +1,4 @@
-module EventMachine
+module ZMachine
   module HttpStatus
     CODE = {
       100  => 'Continue',

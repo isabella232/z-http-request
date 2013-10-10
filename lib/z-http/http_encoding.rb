@@ -1,4 +1,4 @@
-module EventMachine
+module ZMachine
   module HttpEncoding
     HTTP_REQUEST_HEADER="%s %s HTTP/1.1\r\n"
     FIELD_ENCODING = "%s: %s\r\n"

@@ -2,7 +2,7 @@ require 'helper'
 
 $: << 'lib' << '../lib'
 
-require 'em-http/middleware/digest_auth'
+require 'z-http/middleware/digest_auth'
 
 describe 'Digest Auth Authentication header generation' do
   before :each do

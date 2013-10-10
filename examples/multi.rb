@@ -1,10 +1,10 @@
 $: << '../lib' << 'lib'
 
-require 'eventmachine'
-require 'em-http'
+require 'ZMachine'
+require 'z-http'
 
-EventMachine.run {
-  multi = EventMachine::MultiRequest.new
+ZMachine.run {
+  multi = ZMachine::MultiRequest.new
 
   reqs = [
     'http://google.com/',
@@ -12,7 +12,7 @@ EventMachine.run {
   ]
 
   reqs.each_with_index do |url, idx|
-    http = EventMachine::HttpRequest.new(url, :connect_timeout => 1)
+    http = ZMachine::HttpRequest.new(url, :connect_timeout => 1)
     req = http.get
     multi.add idx, req
   end
@@ -20,6 +20,6 @@ EventMachine.run {
   multi.callback  do
     p multi.responses[:callback].size
     p multi.responses[:errback].size
-    EventMachine.stop
+    ZMachine.stop
   end
 }

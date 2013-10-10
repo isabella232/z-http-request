@@ -9,7 +9,7 @@ require 'sinatra/base'
 require 'streamly_ffi'
 require 'curb'
 
-require File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib', 'em-http')
+require File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib', 'z-http')
 
 module Benchmark
   class Server < Sinatra::Base

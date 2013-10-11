@@ -10,21 +10,21 @@ end
 
 pending = urls.size
 
-EM.run do
+ZMachine.run do
   urls.each do |url|
-    http = EM::HttpRequest.new(url).get
+    http = ZMachine::HttpRequest.new(url).get
     http.callback {
       puts "#{url}\n#{http.response_header.status} - #{http.response.length} bytes\n"
       puts http.response
 
       pending -= 1
-      EM.stop if pending < 1
+      ZMachine.stop if pending < 1
     }
     http.errback {
       puts "#{url}\n" + http.error
 
       pending -= 1
-      EM.stop if pending < 1
+      ZMachine.stop if pending < 1
     }
   end
 end

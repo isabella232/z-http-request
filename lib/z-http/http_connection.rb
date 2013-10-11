@@ -34,8 +34,6 @@ module ZMachine
 
   class HttpConnection
     include HTTPMethods
-    include Socksify
-    include Connectify
 
     attr_reader :deferred
     attr_accessor :error, :connopts, :uri, :conn
@@ -52,9 +50,7 @@ module ZMachine
 
     def activate_connection(client)
       begin
-        ZMachine.bind_connect(@connopts.bind, @connopts.bind_port,
-                                  @connopts.host, @connopts.port,
-                                  HttpStubConnection) do |conn|
+        ZMachine.connect(@connopts.host, @connopts.port,HttpStubConnection) do |conn|
           post_init
 
           @deferred = false
@@ -83,7 +79,7 @@ module ZMachine
         # Net outcome: failed connection will invoke the same ConnectionError
         # message on the connection deferred, and on the client deferred.
         #
-        EM.next_tick{client.close(e.message)}
+        ZMachine.next_tick{client.close(e.message)}
       end
     end
 
@@ -152,9 +148,9 @@ module ZMachine
       @peer = @conn.get_peername
 
       if @connopts.socks_proxy?
-        socksify(client.req.uri.host, client.req.uri.port, *@connopts.proxy[:authorization]) { start }
+        raise NotImplementedError
       elsif @connopts.connect_proxy?
-        connectify(client.req.uri.host, client.req.uri.port, *@connopts.proxy[:authorization]) { start }
+        raise NotImplementedError
       else
         start
       end

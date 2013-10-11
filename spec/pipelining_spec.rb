@@ -14,7 +14,7 @@ requires_connection do
         pipe2 = conn.get :path => '/archives/', :keepalive => true
 
         processed = 0
-        stop = proc { EM.stop if processed == 2}
+        stop = proc { ZMachine.stop if processed == 2}
 
         pipe1.errback { failed(conn) }
         pipe1.callback {
@@ -42,7 +42,7 @@ requires_connection do
         pipe2 = conn.head :path => '/archives/', :keepalive => true
 
         processed = 0
-        stop = proc { EM.stop if processed == 2}
+        stop = proc { ZMachine.stop if processed == 2}
 
         pipe1.errback { failed(conn) }
         pipe1.callback {

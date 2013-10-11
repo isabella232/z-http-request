@@ -1,6 +1,9 @@
 # z-http-Request
 
-TODO : update documentation - this is a fork of Ilya Gregoriks em-http-request, which will work with ZMachine/JRuby only and remove Eventmachine completly
+TODO : update documentation
+
+This is a fork of Ilya Gregoriks em-http-request, which will work with ZMachine/JRuby only and removes Eventmachine.
+Furthmore alot of the nice stuff like socksify and more is removed as it is not needed for our simple http client use case.
 
 Async (ZMachine) HTTP client, with support for:
 

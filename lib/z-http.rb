@@ -1,5 +1,4 @@
-require 'ZMachine'
-require 'em-socksify'
+require 'zmachine'
 require 'addressable/uri'
 require 'http/parser'
 

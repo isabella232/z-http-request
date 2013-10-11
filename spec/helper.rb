@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'bundler/setup'
 
+require 'puma'
 require 'z-http'
-require 'z-http/middleware/oauth2'
 require 'multi_json'
 
 require 'stallion'

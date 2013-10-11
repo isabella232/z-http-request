@@ -53,7 +53,7 @@ describe ZMachine::HttpRequest do
       ZMachine::HttpRequest.new('random?text').get
     }.should raise_error
 
-    EM.stop
+    ZMachine.stop
     }
   end
 
@@ -386,21 +386,21 @@ describe ZMachine::HttpRequest do
     }
   end
 
-  it "should detect gzip encoding" do
-    ZMachine.run {
+  # it "should detect gzip encoding" do
+  #   ZMachine.run {
 
-      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/gzip').get :head => {"accept-encoding" => "gzip, compressed"}
+  #     http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/gzip').get :head => {"accept-encoding" => "gzip, compressed"}
 
-      http.errback { failed(http) }
-      http.callback {
-        http.response_header.status.should == 200
-        http.response_header["CONTENT_ENCODING"].should == "gzip"
-        http.response.should == "compressed"
+  #     http.errback { failed(http) }
+  #     http.callback {
+  #       http.response_header.status.should == 200
+  #       http.response_header["CONTENT_ENCODING"].should == "gzip"
+  #       http.response.should == "compressed"
 
-        ZMachine.stop
-      }
-    }
-  end
+  #       ZMachine.stop
+  #     }
+  #   }
+  # end
 
   it "should stream gzip responses" do
     expected_response = Zlib::GzipReader.open(File.dirname(__FILE__) + "/fixtures/gzip-sample.gz") { |f| f.read }
@@ -487,18 +487,19 @@ describe ZMachine::HttpRequest do
       }
     end
 
-    it "should set content-type automatically when passed a ruby hash/array for body" do
-      ZMachine.run {
-        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post :body => {:a => :b}
+    # does not work with puma - see issue #63
+    # it "should set content-type automatically when passed a ruby hash/array for body" do
+    #   ZMachine.run {
+    #     http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post :body => {:a => :b}
 
-        http.errback { failed(http) }
-        http.callback {
-          http.response_header.status.should == 200
-          http.response.should match("application/x-www-form-urlencoded")
-          ZMachine.stop
-        }
-      }
-    end
+    #     http.errback { failed(http) }
+    #     http.callback {
+    #       http.response_header.status.should == 200
+    #       http.response.should match("application/x-www-form-urlencoded")
+    #       ZMachine.stop
+    #     }
+    #   }
+    # end
 
     it "should not override content-type when passing in ruby hash/array for body" do
       ZMachine.run {
@@ -683,6 +684,13 @@ describe ZMachine::HttpRequest do
   end
 
   it "should get the body without Content-Length" do
+    # ZMachine.debug = true
+    # ZMachine.logger = Object.new
+    # class << ZMachine.logger
+    #   def debug(str, hash = {})
+    #     puts "#{str} #{hash.inspect}"
+    #   end
+    # end
     ZMachine.run {
       @s = StubServer.new("HTTP/1.1 200 OK\r\n\r\nFoo")
 
@@ -741,7 +749,7 @@ describe ZMachine::HttpRequest do
         http.callback { failed(http) }
         http.errback {
           http.error.should_not be_nil
-          EM.stop
+          ZMachine.stop
         }
       }
     end
@@ -750,7 +758,6 @@ describe ZMachine::HttpRequest do
   it "should stream a file off disk" do
     ZMachine.run {
       http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').post :file => 'spec/fixtures/google.ca'
-
       http.errback { failed(http) }
       http.callback {
         http.response.should match('google')
@@ -761,14 +768,17 @@ describe ZMachine::HttpRequest do
 
   it "should reconnect if connection was closed between requests" do
     ZMachine.run {
-      conn = EM::HttpRequest.new('http://127.0.0.1:8090/')
+      conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/')
       req = conn.get
+
+      req.errback { failed(req) }
 
       req.callback do
         conn.close('client closing connection')
 
-        EM.next_tick do
+        ZMachine.next_tick do
           req = conn.get :path => "/gzip"
+          req.errback { failed(req) }
           req.callback do
             req.response_header.status.should == 200
             req.response.should match('compressed')
@@ -781,13 +791,14 @@ describe ZMachine::HttpRequest do
 
   it "should report error if connection was closed by server on client keepalive requests" do
     ZMachine.run {
-      conn = EM::HttpRequest.new('http://127.0.0.1:8090/')
+      conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/')
       req = conn.get :keepalive => true
+      req.errback { failed(req) }
 
       req.callback do
         req = conn.get
 
-        req.callback { failed(http) }
+        req.callback { failed(req) }
         req.errback do
           req.error.should match('connection closed by server')
           ZMachine.stop

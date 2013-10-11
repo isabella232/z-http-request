@@ -17,8 +17,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'addressable', '>= 2.3.4'
   s.add_dependency 'cookiejar'
-  # s.add_dependency 'em-socksify', '>= 0.3'
-  s.add_dependency 'zmachine' #, '>= 1.0.3'
+  #s.add_dependency 'zmachine' #, '>= 1.0.3'
   s.add_dependency 'http_parser.rb', '>= 0.6.0.beta.2'
 
   #s.add_development_dependency 'mongrel', '~> 1.2.0.pre2'

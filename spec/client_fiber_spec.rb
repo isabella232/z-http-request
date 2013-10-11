@@ -14,7 +14,7 @@ describe ZMachine::HttpRequest do
           http.errback { f.resume :errback }
 
           Fiber.yield.should == :errback
-          EM.stop
+          ZMachine.stop
         end.resume
       end
     end

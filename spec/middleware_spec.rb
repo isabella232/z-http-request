@@ -13,11 +13,11 @@ describe ZMachine::HttpRequest do
   it "should accept middleware" do
     ZMachine.run {
       lambda {
-        conn = EM::HttpRequest.new('http://127.0.0.1:8090')
+        conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090')
         conn.use ResponseMiddleware
         conn.use EmptyMiddleware
 
-        EM.stop
+        ZMachine.stop
       }.should_not raise_error
     }
   end
@@ -37,7 +37,7 @@ describe ZMachine::HttpRequest do
 
     it "should accept middleware initialization parameters" do
       ZMachine.run {
-        conn = EM::HttpRequest.new('http://127.0.0.1:8090')
+        conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090')
         conn.use ConfigurableMiddleware, 'conf-value' do
           'block-value'
         end
@@ -46,7 +46,7 @@ describe ZMachine::HttpRequest do
         req.callback {
           req.response_header['X-Conf'].should match('conf-value')
           req.response_header['X-Block'].should match('block-value')
-          EM.stop
+          ZMachine.stop
         }
       }
     end
@@ -62,28 +62,28 @@ describe ZMachine::HttpRequest do
 
     it "should execute response middleware before user callbacks" do
       ZMachine.run {
-        conn = EM::HttpRequest.new('http://127.0.0.1:8090')
+        conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090')
         conn.use ResponseMiddleware
 
         req = conn.get
         req.callback {
           req.response_header['X-Header'].should match('middleware')
           req.response.should match('Hello, Middleware!')
-          EM.stop
+          ZMachine.stop
         }
       }
     end
 
     it "should execute global response middleware before user callbacks" do
       ZMachine.run {
-        EM::HttpRequest.use GlobalMiddleware
+        ZMachine::HttpRequest.use GlobalMiddleware
 
-        conn = EM::HttpRequest.new('http://127.0.0.1:8090')
+        conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090')
 
         req = conn.get
         req.callback {
           req.response_header['X-Global'].should match('middleware')
-          EM.stop
+          ZMachine.stop
         }
       }
     end

@@ -13,7 +13,7 @@ OAuthConfig = {
   :access_token_secret => ''
 }
 
-EM.run do
+ZMachine.run do
   # automatically parse the JSON response into a Ruby object
   ZMachine::HttpRequest.use ZMachine::Middleware::JSONResponse
 
@@ -24,12 +24,12 @@ EM.run do
   http = conn.get
   http.callback do
     pp http.response
-    EM.stop
+    ZMachine.stop
   end
 
   http.errback do
     puts "Failed retrieving user stream."
     pp http.response
-    EM.stop
+    ZMachine.stop
   end
 end

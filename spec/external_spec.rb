@@ -10,7 +10,7 @@ requires_connection do
         http.errback { failed(http) }
         http.callback {
           http.response_header.status.should == 200
-          EM.stop
+          ZMachine.stop
         }
       }
     end

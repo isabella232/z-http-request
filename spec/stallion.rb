@@ -53,7 +53,7 @@ module Stallion
 
   def self.run(options = {})
     options = {:Host => "127.0.0.1", :Port => 8090}.merge(options)
-    Rack::Handler::Mongrel.run(Rack::Lint.new(self), options)
+    Rack::Handler.get(:puma).run(Rack::Lint.new(self), options)
   end
 
   def self.call(env)
@@ -246,9 +246,9 @@ Thread.new do
   end
 end
 
-#
+
 # Simple HTTP Proxy server
-#
+
 Thread.new do
   server = TCPServer.new('127.0.0.1', 8083)
   loop do

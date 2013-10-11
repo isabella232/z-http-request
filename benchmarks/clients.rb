@@ -36,7 +36,7 @@ with_server do
             count += 1
             if count == n
               p [count, error]
-              EM.stop
+              ZMachine.stop
             end
           }
 
@@ -45,7 +45,7 @@ with_server do
             error += 1
             if count == n
               p [count, error]
-              EM.stop
+              ZMachine.stop
             end
           }
         end
@@ -65,7 +65,7 @@ with_server do
             count += 1
             if count == n
               p [count, error]
-              EM.stop
+              ZMachine.stop
             end
           }
 
@@ -74,7 +74,7 @@ with_server do
             error += 1
             if count == n
               p [count, error]
-              EM.stop
+              ZMachine.stop
             end
           }
         end

@@ -1,7 +1,7 @@
 module ZMachine
   module Middleware
     class OAuth2
-      include EM::HttpEncoding
+      include ZMachine::HttpEncoding
       attr_accessor :access_token
 
       def initialize(opts={})

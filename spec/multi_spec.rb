@@ -29,8 +29,8 @@ describe ZMachine::MultiRequest do
 
   it "should require unique keys for each deferrable" do
     lambda do
-      multi.add :df1, EM::DefaultDeferrable.new
-      multi.add :df1, EM::DefaultDeferrable.new
+      multi.add :df1, ZMachine::DefaultDeferrable.new
+      multi.add :df1, ZMachine::DefaultDeferrable.new
     end.should raise_error("Duplicate Multi key")
   end
 

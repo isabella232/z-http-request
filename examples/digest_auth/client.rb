@@ -8,18 +8,18 @@ digest_config = {
   :password => 'digest_password'
 }
 
-EM.run do
+ZMachine.run do
 
-  conn_handshake = EM::HttpRequest.new('http://localhost:3000')
+  conn_handshake = ZMachine::HttpRequest.new('http://localhost:3000')
   http_handshake = conn_handshake.get
 
   http_handshake.callback do
-    conn = EM::HttpRequest.new('http://localhost:3000')
-    conn.use EM::Middleware::DigestAuth, http_handshake.response_header['WWW_AUTHENTICATE'], digest_config
+    conn = ZMachine::HttpRequest.new('http://localhost:3000')
+    conn.use ZMachine::Middleware::DigestAuth, http_handshake.response_header['WWW_AUTHENTICATE'], digest_config
     http = conn.get
     http.callback do
       puts http.response
-      EM.stop
+      ZMachine.stop
     end
   end
 end

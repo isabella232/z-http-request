@@ -35,7 +35,7 @@ describe ZMachine::HttpRequest do
         http.last_effective_url.to_s.should == 'http://127.0.0.1:8090/gzip'
         http.redirects.should == 1
 
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -47,7 +47,7 @@ describe ZMachine::HttpRequest do
       http.callback {
         http.response_header.status.should == 201
         http.response.should match(/Hello/)
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -73,7 +73,7 @@ describe ZMachine::HttpRequest do
         http.response.should_not match(/Cookie/)
         @stub.stop
         @echo.stop
-        EM.stop
+        ZMachine.stop
       end
     end
   end
@@ -99,7 +99,7 @@ describe ZMachine::HttpRequest do
         http.response.should match(/Cookie/)
         @stub.stop
         @echo.stop
-        EM.stop
+        ZMachine.stop
       end
     end
   end
@@ -126,7 +126,7 @@ describe ZMachine::HttpRequest do
         http.response.should match(/Cookie/)
         @stub.stop
         @echo.stop
-        EM.stop
+        ZMachine.stop
       end
     end
   end
@@ -147,7 +147,7 @@ describe ZMachine::HttpRequest do
         http.redirects.should == 3
 
         @stub.stop
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -159,7 +159,7 @@ describe ZMachine::HttpRequest do
       http.callback {
         http.response_header.status.should == 200
         http.last_effective_url.to_s.should == 'http://127.0.0.1:8090/'
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -172,7 +172,7 @@ describe ZMachine::HttpRequest do
         http.response_header.status.should == 200
         http.last_effective_url.to_s.should == 'http://127.0.0.1:8090/'
 
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -186,7 +186,7 @@ describe ZMachine::HttpRequest do
         http.last_effective_url.to_s.should == 'http://127.0.0.1:8090/redirect'
         http.redirects.should == 0
 
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -197,7 +197,7 @@ describe ZMachine::HttpRequest do
       http.callback { failed(http) }
       http.errback {
         http.redirects.should == 0
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -209,7 +209,7 @@ describe ZMachine::HttpRequest do
       http.callback {
         http.last_effective_url.to_s.should match('http://127.0.0.1:8090/')
         http.response.should match('Hello, World!')
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -220,7 +220,7 @@ describe ZMachine::HttpRequest do
       http.callback { failed(http) }
       http.errback {
         http.error.should == 'Location header format error'
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -235,7 +235,7 @@ describe ZMachine::HttpRequest do
       http.callback { failed(http) }
       http.errback {
         (Time.now.to_i - t).should <= 1
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -253,7 +253,7 @@ describe ZMachine::HttpRequest do
         http.cookies.should include("id=2;")
         http.cookies.should include("another_id=1")
 
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -271,7 +271,7 @@ describe ZMachine::HttpRequest do
         http.cookies.should include("id=2;")
         http.cookies.should_not include("another_id=1; expires=Sat, 09 Aug 2031 17:53:39 GMT; path=/;")
 
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -285,7 +285,7 @@ describe ZMachine::HttpRequest do
         http.response_header.status.should == 200
         http.redirects.should == 1
 
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -299,7 +299,7 @@ describe ZMachine::HttpRequest do
       http.callback {
         http.response_header.status.should == 200
         http.response_header['EM_MIDDLEWARE'].to_i.should == 3
-        EM.stop
+        ZMachine.stop
       }
     }
   end
@@ -313,7 +313,7 @@ describe ZMachine::HttpRequest do
       http.callback {
         http.response_header.status.should == 301
         http.last_effective_url.to_s.should == 'http://127.0.0.1:8090/redirect/middleware_redirects_2'
-        EM.stop
+        ZMachine.stop
       }
     }
   end

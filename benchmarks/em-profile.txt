@@ -32,15 +32,15 @@ Total: 143 samples
        0   0.0% 100.0%        1   0.7% Excon::Connection#request
        0   0.0% 100.0%        1   0.7% Excon::Connection#socket
        0   0.0% 100.0%        1   0.7% FFI::Library#ffi_lib
-       0   0.0% 100.0%       10   7.0% Gem::GemPathSearcher#find
-       0   0.0% 100.0%        1   0.7% Gem::GemPathSearcher#find_active
-       0   0.0% 100.0%       16  11.2% Gem::GemPathSearcher#init_gemspecs
-       0   0.0% 100.0%       16  11.2% Gem::GemPathSearcher#initialize
-       0   0.0% 100.0%       11   7.7% Gem::GemPathSearcher#matching_file?
-       0   0.0% 100.0%       11   7.7% Gem::GemPathSearcher#matching_files
-       0   0.0% 100.0%       14   9.8% Gem::SourceIndex#load_gems_in
-       0   0.0% 100.0%       14   9.8% Gem::SourceIndex#refresh!
-       0   0.0% 100.0%        1   0.7% Gem::SourceIndex#search
+       0   0.0% 100.0%       10   7.0% GZMachine::GemPathSearcher#find
+       0   0.0% 100.0%        1   0.7% GZMachine::GemPathSearcher#find_active
+       0   0.0% 100.0%       16  11.2% GZMachine::GemPathSearcher#init_gemspecs
+       0   0.0% 100.0%       16  11.2% GZMachine::GemPathSearcher#initialize
+       0   0.0% 100.0%       11   7.7% GZMachine::GemPathSearcher#matching_file?
+       0   0.0% 100.0%       11   7.7% GZMachine::GemPathSearcher#matching_files
+       0   0.0% 100.0%       14   9.8% GZMachine::SourceIndex#load_gems_in
+       0   0.0% 100.0%       14   9.8% GZMachine::SourceIndex#refresh!
+       0   0.0% 100.0%        1   0.7% GZMachine::SourceIndex#search
        0   0.0% 100.0%        1   0.7% HttpOptions#initialize
        0   0.0% 100.0%        1   0.7% HttpOptions#set_uri
        0   0.0% 100.0%       14   9.8% Integer#times

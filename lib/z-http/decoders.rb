@@ -221,6 +221,7 @@ module ZMachine::HttpDecoders
     end
 
     def decompress(compressed)
+      compressed.force_encoding('BINARY')
       @header ||= GZipHeader.new
       if !@header.finished?
         compressed = @header.extract_stream(compressed)

@@ -50,7 +50,7 @@ module ZMachine
 
     def activate_connection(client)
       begin
-        ZMachine.connect(@connopts.host, @connopts.port,HttpStubConnection) do |conn|
+        ZMachine.connect(@connopts.host, @connopts.port, HttpStubConnection) do |conn|
           post_init
 
           @deferred = false
@@ -166,6 +166,7 @@ module ZMachine
     end
 
     def unbind(reason = nil)
+      reason ||= Errno::ETIMEDOUT if @conn.channel.timedout?
       @clients.map { |c| c.unbind(reason) }
 
       if r = @pending.shift

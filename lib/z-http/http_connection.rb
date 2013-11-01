@@ -93,7 +93,7 @@ module ZMachine
       @conn.callback { c.connection_completed }
 
       middleware.each do |m|
-        c.callback &m.method(:response) if m.respond_to?(:response)
+        c.callback(&m.method(:response)) if m.respond_to?(:response)
       end
 
       @clients.push c
@@ -166,7 +166,6 @@ module ZMachine
     end
 
     def unbind(reason = nil)
-      reason ||= Errno::ETIMEDOUT if @conn.channel.timedout?
       @clients.map { |c| c.unbind(reason) }
 
       if r = @pending.shift

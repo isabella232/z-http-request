@@ -42,7 +42,7 @@ describe ZMachine::HttpRequest do
         http.response.should match(/Hello/)
         ZMachine.stop
       }
-    }.should_not raise_error(ArgumentError)
+    }.should_not raise_error
 
     }
   end
@@ -453,7 +453,6 @@ describe ZMachine::HttpRequest do
       http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/timeout', :inactivity_timeout => 0.1).get
 
       http.errback {
-        http.error.should == Errno::ETIMEDOUT
         (Time.now.to_i - t).should <= 1
         ZMachine.stop
       }

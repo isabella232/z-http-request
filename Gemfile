@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gemspec
 
 gem 'ruby-debug'
-gem 'zmachine', :path  => '/Users/martin/Documents/projects/zmachine'
+gem 'zmachine', :path => '../zmachine'
 
 group :benchmark do
   gem 'excon'

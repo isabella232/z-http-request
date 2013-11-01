@@ -13,10 +13,13 @@ describe ZMachine::HttpRequest do
     }
   end
 
+  # BB: 127.1.1.1 actually loops back, and if you have some process listening
+  # on port 80 this spec fails *facepalm*
+  # also this does not check any DNS timeout, but a connect timeout ...
   it "should fail GET on DNS timeout" do
     ZMachine.run {
       ZMachine.heartbeat_interval = 0.1
-      http = ZMachine::HttpRequest.new('http://127.1.1.1/', :connect_timeout => 0.1).get
+      http = ZMachine::HttpRequest.new('http://127.1.1.1:1/', :connect_timeout => 0.1).get
       http.callback { failed(http) }
       http.errback {
         http.response_header.status.should == 0

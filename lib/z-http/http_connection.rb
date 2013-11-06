@@ -166,6 +166,7 @@ module ZMachine
     end
 
     def unbind(reason = nil)
+      reason ||= Errno::ETIMEDOUT if @conn.channel.timedout?
       @clients.map { |c| c.unbind(reason) }
 
       if r = @pending.shift

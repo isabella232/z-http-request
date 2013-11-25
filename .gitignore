@@ -1,9 +1,10 @@
 *.bundle
 *.o
-Makefile
-mkmf.log
-Gemfile.lock
-misc
-gems/
-vendor/
 .idea
+.jbundler/
+Gemfile.lock
+Makefile
+gems/
+misc
+mkmf.log
+vendor/

@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gemspec
 
 gem 'ruby-debug'
+gem 'liquid-ext'
 gem 'zmachine', :path => '../zmachine'
 
 group :benchmark do

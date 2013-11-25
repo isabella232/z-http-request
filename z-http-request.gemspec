@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = ZMachine::HttpRequest::VERSION
 
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Ilya Grigorik", "Martin Karlsch"]
-  s.email       = ['ilya@igvita.com', "martin.karlsch@liquidm.com"]
-  s.homepage    = 'http://github.com/madvertise/z-http-request'
+  s.authors     = ["Ilya Grigorik", "LiquidM, Inc."]
+  s.email       = ['ilya@igvita.com', "opensource@liquidm.com"]
+  s.homepage    = 'http://github.com/liquidm/z-http-request'
   s.summary     = 'ZMachine based, async HTTP Request client'
   s.description = s.summary
   s.license     = 'MIT'
@@ -17,10 +17,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'addressable', '>= 2.3.4'
   s.add_dependency 'cookiejar'
-  #s.add_dependency 'zmachine' #, '>= 1.0.3'
+  s.add_dependency 'zmachine'
   s.add_dependency 'http_parser.rb', '>= 0.6.0.beta.2'
 
-  #s.add_development_dependency 'mongrel', '~> 1.2.0.pre2'
   s.add_development_dependency 'puma'
   s.add_development_dependency 'multi_json'
   s.add_development_dependency 'rack'

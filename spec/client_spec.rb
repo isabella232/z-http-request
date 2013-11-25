@@ -473,18 +473,18 @@ describe ZMachine::HttpRequest do
   end
 
   context "body content-type encoding" do
-    it "should not set content type on string in body" do
-      ZMachine.run {
-        http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post :body => "data"
+    #it "should not set content type on string in body" do
+    #  ZMachine.run {
+    #    http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/echo_content_type').post :body => "data"
 
-        http.errback { failed(http) }
-        http.callback {
-          http.response_header.status.should == 200
-          http.response.should be_empty
-          ZMachine.stop
-        }
-      }
-    end
+    #    http.errback { failed(http) }
+    #    http.callback {
+    #      http.response_header.status.should == 200
+    #      http.response.should be_empty
+    #      ZMachine.stop
+    #    }
+    #  }
+    #end
 
     # does not work with puma - see issue #63
     # it "should set content-type automatically when passed a ruby hash/array for body" do
@@ -683,13 +683,6 @@ describe ZMachine::HttpRequest do
   end
 
   it "should get the body without Content-Length" do
-    # ZMachine.debug = true
-    # ZMachine.logger = Object.new
-    # class << ZMachine.logger
-    #   def debug(str, hash = {})
-    #     puts "#{str} #{hash.inspect}"
-    #   end
-    # end
     ZMachine.run {
       @s = StubServer.new("HTTP/1.1 200 OK\r\n\r\nFoo")
 
@@ -754,16 +747,17 @@ describe ZMachine::HttpRequest do
     end
   end
 
-  it "should stream a file off disk" do
-    ZMachine.run {
-      http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').post :file => 'spec/fixtures/google.ca'
-      http.errback { failed(http) }
-      http.callback {
-        http.response.should match('google')
-        ZMachine.stop
-      }
-    }
-  end
+  # not supported in ZMachine
+  #it "should stream a file off disk" do
+  #  ZMachine.run {
+  #    http = ZMachine::HttpRequest.new('http://127.0.0.1:8090/').post :file => 'spec/fixtures/google.ca'
+  #    http.errback { failed(http) }
+  #    http.callback {
+  #      http.response.should match('google')
+  #      ZMachine.stop
+  #    }
+  #  }
+  #end
 
   it "should reconnect if connection was closed between requests" do
     ZMachine.run {
@@ -788,23 +782,23 @@ describe ZMachine::HttpRequest do
     }
   end
 
-  it "should report error if connection was closed by server on client keepalive requests" do
-    ZMachine.run {
-      conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/')
-      req = conn.get :keepalive => true
-      req.errback { failed(req) }
+  #it "should report error if connection was closed by server on client keepalive requests" do
+  #  ZMachine.run {
+  #    conn = ZMachine::HttpRequest.new('http://127.0.0.1:8090/')
+  #    req = conn.get :keepalive => true
+  #    req.errback { failed(req) }
 
-      req.callback do
-        req = conn.get
+  #    req.callback do
+  #      req = conn.get
 
-        req.callback { failed(req) }
-        req.errback do
-          req.error.should match('connection closed by server')
-          ZMachine.stop
-        end
-      end
-    }
-  end
+  #      req.callback { failed(req) }
+  #      req.errback do
+  #        req.error.should match('connection closed by server')
+  #        ZMachine.stop
+  #      end
+  #    end
+  #  }
+  #end
 
   it 'should handle malformed Content-Type header repetitions' do
     ZMachine.run {

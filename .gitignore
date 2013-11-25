@@ -7,4 +7,5 @@ Makefile
 gems/
 misc
 mkmf.log
+pkg/
 vendor/

@@ -2,9 +2,8 @@ source 'http://rubygems.org'
 
 gemspec
 
-gem 'ruby-debug'
 gem 'liquid-ext'
-gem 'zmachine', :path => '../zmachine'
+gem 'zmachine'
 
 group :benchmark do
   gem 'excon'

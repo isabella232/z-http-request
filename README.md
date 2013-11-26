@@ -5,6 +5,7 @@ This is a fork of Ilya Gregoriks em-http-request, ported to
 socksify has been removed as it is not needed for our simple http client use
 case.
 
+[![Gem Version](https://badge.fury.io/rb/z-http-request.png)](http://badge.fury.io/rb/z-http-request)
 [![Build Status](https://travis-ci.org/liquidm/z-http-request.png)](https://travis-ci.org/liquidm/z-http-request)
 [![Code Climate](https://codeclimate.com/github/liquidm/z-http-request.png)](https://codeclimate.com/github/liquidm/z-http-request)
 [![Dependency Status](https://gemnasium.com/liquidm/z-http-request.png)](https://gemnasium.com/liquidm/z-http-request)

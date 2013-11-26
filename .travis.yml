@@ -1,6 +1,7 @@
 language: ruby
 rvm:
 - jruby
+bundler_args: --without benchmark
 notifications:
   email: false
   hipchat:
